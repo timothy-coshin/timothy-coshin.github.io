@@ -154,31 +154,26 @@
   color: var(--muted);
 }
 
-/* --- Research Fusion Game Styles --- */
+/* --- Research Fusion Game: WWW Edition --- */
 .game-section {
-  margin-top: 80px;
-  padding-top: 40px;
+  margin-top: 60px;
+  padding: 40px 0;
   border-top: 1px solid var(--border);
   text-align: center;
 }
 
-.game-desc {
-  font-size: 0.95rem;
-  color: var(--muted);
-  margin-bottom: 20px;
-}
-
 .game-container-2048 {
   position: relative;
-  width: 320px;
+  width: 320px; /* 전체 너비 고정 */
+  height: 400px;
   margin: 0 auto;
-  touch-action: none; /* 모바일 페이지 스크롤 방지 */
+  touch-action: none;
 }
 
 .score-container {
   font-weight: bold;
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
   color: var(--accent);
 }
 
@@ -188,73 +183,73 @@
   background: #bbada0;
   border-radius: 6px;
   position: relative;
-  padding: 10px; /* 패딩 10px */
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 10px;
+  padding: 15px; /* 내부 여백 */
   box-sizing: border-box;
 }
 
+/* 배경 격자 (4x4) */
 .grid-cell {
-  width: 67.5px;
-  height: 67.5px;
+  width: 65px;
+  height: 65px;
   background: rgba(238, 228, 218, 0.35);
-  border-radius: 3px;
+  border-radius: 4px;
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
+.grid-cell:nth-child(4n) { margin-right: 0; }
 
+/* 실시간 생성되는 타일 */
 .tile {
-  width: 67.5px;
-  height: 67.5px;
-  border-radius: 3px;
+  width: 65px;
+  height: 65px;
+  border-radius: 4px;
   position: absolute;
-  top: 0;   /* 기준점 고정 */
-  left: 0;  /* 기준점 고정 */
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  font-size: 0.75rem;
-  transition: transform 0.1s, background 0.1s;
-  text-align: center;
-  word-break: break-all;
-  padding: 5px;
-  box-sizing: border-box; /* 패딩이 크기에 영향 주지 않도록 */
-  z-index: 2;
+  font-size: 0.85rem;
+  transition: transform 100ms ease-in-out;
+  animation: appear 150ms ease-out;
+  box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* 타일 단계별 색상 */
-.tile-2 { background: #eee4da; color: #776e65; }
-.tile-4 { background: #ede0c8; color: #776e65; }
-.tile-8 { background: #f2b179; color: white; }
-.tile-16 { background: #f59563; color: white; }
-.tile-32 { background: #f67c5f; color: white; }
-.tile-64 { background: #f65e3b; color: white; }
-.tile-128 { background: #edcf72; color: white; font-size: 0.65rem; }
-.tile-256 { background: #edcc61; color: white; font-size: 0.65rem; }
-.tile-512 { background: #edc850; color: white; font-size: 0.65rem; }
-.tile-1024 { background: #edc53f; color: white; font-size: 0.6rem; }
-.tile-2048 { background: #2563eb; color: white; font-size: 0.6rem; }
+@keyframes appear {
+  0% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
+}
 
+/* 타일별 색상 (Data -> WWW) */
+.tile-2 { background: #eee4da; color: #776e65; } /* Data */
+.tile-4 { background: #ede0c8; color: #776e65; } /* Node */
+.tile-8 { background: #f2b179; color: white; }   /* Graph */
+.tile-16 { background: #f59563; color: white; }  /* Web */
+.tile-32 { background: var(--accent); color: white; box-shadow: 0 0 10px var(--accent); } /* WWW 🎉 */
+
+/* 게임 오버/성공 메시지 */
 #game-message {
   display: none;
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
+  top: 0; left: 0; width: 100%; height: 320px;
+  background: rgba(255, 255, 255, 0.9);
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 100;
   border-radius: 6px;
-  z-index: 10;
 }
-
+#game-message p { font-size: 1.5rem; font-weight: bold; margin-bottom: 15px; }
 #game-message button {
-  margin-top: 15px;
-  padding: 8px 20px;
+  padding: 10px 20px;
   background: var(--accent);
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
 }
     
   </style>
@@ -350,22 +345,17 @@
   const gridContainer = document.getElementById('grid-container');
   const scoreDisplay = document.getElementById('score');
   const messageScreen = document.getElementById('game-message');
+  
   let score = 0;
-  let tiles = [];
-
-  // 단계 수정: Data -> Node -> Graph -> Web 순서
+  let tiles = Array(16).fill(0);
+  
+  // 요청하신 5단계 구성
   const labels = {
     2: "Data",
     4: "Node",
     8: "Graph",
     16: "Web",
-    32: "WWW",
-    64: "Mining",
-    128: "Fusion",
-    256: "Logic",
-    512: "Reasoning",
-    1024: "Submission",
-    2048: "Published!"
+    32: "WWW 🎉"
   };
 
   function initGame() {
@@ -376,7 +366,7 @@
     messageScreen.style.display = 'none';
     addRandomTile();
     addRandomTile();
-    drawTiles();
+    render();
   }
 
   function addRandomTile() {
@@ -387,22 +377,28 @@
     }
   }
 
-  function drawTiles() {
+  // 정확한 위치 계산 함수 (Padding: 15, Tile: 65, Gap: 10)
+  function getPos(i) {
+    const row = Math.floor(i / 4);
+    const col = i % 4;
+    return {
+      x: 15 + col * (65 + 10),
+      y: 15 + row * (65 + 10)
+    };
+  }
+
+  function render() {
     gridContainer.querySelectorAll('.tile').forEach(t => t.remove());
     tiles.forEach((value, i) => {
       if (value > 0) {
-        let tile = document.createElement('div');
+        const tile = document.createElement('div');
         tile.className = `tile tile-${value}`;
         tile.innerText = labels[value] || value;
-        
-        let row = Math.floor(i / 4);
-        let col = i % 4;
-        
-        // 정렬 수정: 패딩 10px를 더해 정확한 칸 안으로 위치시킴
-        let x = col * 77.5 + 10; 
-        let y = row * 77.5 + 10;
-        
-        tile.style.transform = `translate(${x}px, ${y}px)`;
+        const pos = getPos(i);
+        // translate를 사용하여 부드럽게 배치 (좌표 오차 없음)
+        tile.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+        tile.style.left = "0px";
+        tile.style.top = "0px";
         gridContainer.appendChild(tile);
       }
     });
@@ -413,43 +409,31 @@
     let newTiles = [...tiles];
     const getIdx = (r, c) => r * 4 + c;
 
-    if (direction === 'UP' || direction === 'DOWN') {
-      for (let c = 0; c < 4; c++) {
-        let column = [0, 1, 2, 3].map(r => newTiles[getIdx(r, c)]);
-        let filtered = column.filter(v => v !== 0);
-        if (direction === 'DOWN') filtered.reverse();
-        for (let i = 0; i < filtered.length - 1; i++) {
-          if (filtered[i] === filtered[i+1]) {
-            filtered[i] *= 2;
-            score += filtered[i];
-            filtered.splice(i + 1, 1);
-          }
-        }
-        while (filtered.length < 4) filtered.push(0);
-        if (direction === 'DOWN') filtered.reverse();
-        [0, 1, 2, 3].forEach(r => {
-          if (newTiles[getIdx(r, c)] !== filtered[r]) hasChanged = true;
-          newTiles[getIdx(r, c)] = filtered[r];
-        });
+    for (let i = 0; i < 4; i++) {
+      let line = [];
+      for (let j = 0; j < 4; j++) {
+        let idx = (direction === 'UP' || direction === 'DOWN') ? getIdx(j, i) : getIdx(i, j);
+        line.push(newTiles[idx]);
       }
-    } else {
-      for (let r = 0; r < 4; r++) {
-        let row = [0, 1, 2, 3].map(c => newTiles[getIdx(r, c)]);
-        let filtered = row.filter(v => v !== 0);
-        if (direction === 'RIGHT') filtered.reverse();
-        for (let i = 0; i < filtered.length - 1; i++) {
-          if (filtered[i] === filtered[i+1]) {
-            filtered[i] *= 2;
-            score += filtered[i];
-            filtered.splice(i + 1, 1);
-          }
+
+      if (direction === 'DOWN' || direction === 'RIGHT') line.reverse();
+      
+      let filtered = line.filter(v => v !== 0);
+      for (let j = 0; j < filtered.length - 1; j++) {
+        if (filtered[j] === filtered[j+1]) {
+          filtered[j] *= 2;
+          score += filtered[j];
+          filtered.splice(j + 1, 1);
+          filtered.push(0);
         }
-        while (filtered.length < 4) filtered.push(0);
-        if (direction === 'RIGHT') filtered.reverse();
-        [0, 1, 2, 3].forEach(c => {
-          if (newTiles[getIdx(r, c)] !== filtered[c]) hasChanged = true;
-          newTiles[getIdx(r, c)] = filtered[c];
-        });
+      }
+      while (filtered.length < 4) filtered.push(0);
+      if (direction === 'DOWN' || direction === 'RIGHT') filtered.reverse();
+
+      for (let j = 0; j < 4; j++) {
+        let idx = (direction === 'UP' || direction === 'DOWN') ? getIdx(j, i) : getIdx(i, j);
+        if (newTiles[idx] !== filtered[j]) hasChanged = true;
+        newTiles[idx] = filtered[j];
       }
     }
 
@@ -457,44 +441,43 @@
       tiles = newTiles;
       scoreDisplay.innerText = score;
       addRandomTile();
-      drawTiles();
-      checkGameOver();
+      render();
+      checkStatus();
     }
   }
 
-  function checkGameOver() {
-    if (tiles.includes(2048)) {
+  function checkStatus() {
+    // 32(WWW) 타일이 생성되면 승리!
+    if (tiles.includes(32)) {
       messageScreen.style.display = 'flex';
-      messageScreen.querySelector('p').innerText = "Paper Published! 🎉";
+      messageScreen.querySelector('p').innerText = "WWW 2026 Accepted! 🚀";
     } else if (!tiles.includes(0)) {
-      // 빈 칸이 없을 때 합칠 수 있는게 있는지 확인 (간소화)
+      // 움직일 수 있는 공간이 없을 때
       messageScreen.style.display = 'flex';
-      messageScreen.querySelector('p').innerText = "Revision Needed! (Game Over)";
+      messageScreen.querySelector('p').innerText = "Revision Needed! 😭";
     }
   }
 
-  // 컨트롤: 키보드
   window.addEventListener('keydown', e => {
-    if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) {
+    if (e.key.includes("Arrow")) {
       e.preventDefault();
       move(e.key.replace("Arrow", "").toUpperCase());
     }
   });
 
-  // 컨트롤: 모바일 스와이프
-  let touchStart = null;
-  gridContainer.addEventListener('touchstart', e => { touchStart = e.touches[0]; }, {passive: false});
-  gridContainer.addEventListener('touchmove', e => { e.preventDefault(); }, {passive: false});
+  // 스와이프 지원
+  let ts;
+  gridContainer.addEventListener('touchstart', e => { ts = e.touches[0]; }, {passive:false});
+  gridContainer.addEventListener('touchmove', e => { e.preventDefault(); }, {passive:false});
   gridContainer.addEventListener('touchend', e => {
-    if (!touchStart) return;
-    let dx = e.changedTouches[0].screenX - touchStart.screenX;
-    let dy = e.changedTouches[0].screenY - touchStart.screenY;
+    if (!ts) return;
+    let dx = e.changedTouches[0].screenX - ts.screenX;
+    let dy = e.changedTouches[0].screenY - ts.screenY;
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30) move(dx > 0 ? 'RIGHT' : 'LEFT');
     else if (Math.abs(dy) > 30) move(dy > 0 ? 'DOWN' : 'UP');
-    touchStart = null;
+    ts = null;
   });
 
-  function reset2048() { initGame(); }
   initGame();
 </script>
 </html>
