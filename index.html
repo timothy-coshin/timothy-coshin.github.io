@@ -111,16 +111,60 @@
         font-size: 2.2rem;
       }
     }
+
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 48px;
+  }
+  
+  .profile-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px; 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+  }
+  
+  .header-text h1 {
+    margin: 0;
+  }
+  
+  .header-text .subtitle {
+    margin-top: 8px;
+  }
+
+    @media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+
+    
   </style>
 </head>
 
 <body>
   <div class="container">
 
-    <h1>Wooyoung Kim</h1>
-    <div class="subtitle">
-      Postdoctoral Researcher in AI · Graph-augmented LLMs · Neuro-Symbolic Reasoning
+  <div class="header">
+    <img src="profile.jpg" alt="Wooyoung Kim" class="profile-img" />
+    <div class="header-text">
+      <h1>Wooyoung Kim</h1>
+      <div class="subtitle">
+        Postdoctoral Researcher in AI · Graph-augmented LLMs · Neuro-Symbolic Reasoning
+      </div>
     </div>
+  </div>
 
     <h2>About</h2>
     <p>
