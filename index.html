@@ -348,14 +348,22 @@
   
   let score = 0;
   let tiles = Array(16).fill(0);
-  
-  // 요청하신 5단계 구성
+  const CELL_SIZE = 60;
+  const GAP = 12;
+
+  // 대학원생 서바이벌 테마 단계
   const labels = {
-    2: "Data",
-    4: "Node",
-    8: "Graph",
-    16: "Web",
-    32: "WWW 🎉"
+    2: "Idea",
+    4: "Data",
+    8: "Lab Meeting",
+    16: "Experiment",
+    32: "Lab Meeting++",
+    64: "Experiment++",
+    128: "Writing",
+    256: "Submission",
+    512: "Returral",
+    1024: "Published",
+    2048: "Graduate"
   };
 
   function initGame() {
@@ -377,17 +385,19 @@
     }
   }
 
-  // 정확한 위치 계산 함수 (Padding: 15, Tile: 65, Gap: 10)
   function getPos(i) {
     const row = Math.floor(i / 4);
     const col = i % 4;
+    // (간격 + 셀크기) * 인덱스 + 시작간격
     return {
-      x: 15 + col * (65 + 10),
-      y: 15 + row * (65 + 10)
+      x: col * (CELL_SIZE + GAP) + GAP,
+      y: row * (CELL_SIZE + GAP) + GAP
     };
   }
 
   function render() {
+    // 기존 타일들 유지하면서 위치만 이동시키기 위해 ID 부여 방식 사용 가능하나, 
+    // 여기서는 간단히 새로 그리되 위치 계산을 정교화함
     gridContainer.querySelectorAll('.tile').forEach(t => t.remove());
     tiles.forEach((value, i) => {
       if (value > 0) {
@@ -395,10 +405,9 @@
         tile.className = `tile tile-${value}`;
         tile.innerText = labels[value] || value;
         const pos = getPos(i);
-        // translate를 사용하여 부드럽게 배치 (좌표 오차 없음)
+        tile.style.left = `0px`;
+        tile.style.top = `0px`;
         tile.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-        tile.style.left = "0px";
-        tile.style.top = "0px";
         gridContainer.appendChild(tile);
       }
     });
@@ -418,6 +427,7 @@
 
       if (direction === 'DOWN' || direction === 'RIGHT') line.reverse();
       
+      // 결합 로직
       let filtered = line.filter(v => v !== 0);
       for (let j = 0; j < filtered.length - 1; j++) {
         if (filtered[j] === filtered[j+1]) {
@@ -447,17 +457,17 @@
   }
 
   function checkStatus() {
-    // 32(WWW) 타일이 생성되면 승리!
-    if (tiles.includes(32)) {
+    if (tiles.includes(2048)) {
       messageScreen.style.display = 'flex';
-      messageScreen.querySelector('p').innerText = "WWW 2026 Accepted! 🚀";
+      messageScreen.querySelector('p').innerText = "Mission Accomplished: Tenure Track! 🏫";
     } else if (!tiles.includes(0)) {
-      // 움직일 수 있는 공간이 없을 때
+      // 움직일 수 있는지 체크 생략(UI 간소화)
       messageScreen.style.display = 'flex';
-      messageScreen.querySelector('p').innerText = "Revision Needed! 😭";
+      messageScreen.querySelector('p').innerText = "PhD is hard... Retry? 😭";
     }
   }
 
+  // 조작 핸들러
   window.addEventListener('keydown', e => {
     if (e.key.includes("Arrow")) {
       e.preventDefault();
@@ -465,7 +475,6 @@
     }
   });
 
-  // 스와이프 지원
   let ts;
   gridContainer.addEventListener('touchstart', e => { ts = e.touches[0]; }, {passive:false});
   gridContainer.addEventListener('touchmove', e => { e.preventDefault(); }, {passive:false});
@@ -473,11 +482,12 @@
     if (!ts) return;
     let dx = e.changedTouches[0].screenX - ts.screenX;
     let dy = e.changedTouches[0].screenY - ts.screenY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30) move(dx > 0 ? 'RIGHT' : 'LEFT');
-    else if (Math.abs(dy) > 30) move(dy > 0 ? 'DOWN' : 'UP');
+    if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 'RIGHT' : 'LEFT');
+    else move(dy > 0 ? 'DOWN' : 'UP');
     ts = null;
   });
 
   initGame();
 </script>
+
 </html>
