@@ -16,16 +16,13 @@
       --border: #e5e7eb;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       padding: 64px 20px;
       background: var(--bg);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                   Inter, Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
       color: var(--text);
     }
 
@@ -38,246 +35,108 @@
       box-shadow: 0 25px 45px rgba(0, 0, 0, 0.06);
     }
 
-    h1 {
-      font-size: 2.7rem;
-      margin: 0 0 8px 0;
-      letter-spacing: -0.025em;
-    }
+    /* Header & Profile */
+    .header { display: flex; align-items: center; gap: 28px; margin-bottom: 48px; }
+    .profile-img { width: 120px; height: 120px; object-fit: cover; border-radius: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.10); }
+    h1 { font-size: 2.7rem; margin: 0 0 8px 0; letter-spacing: -0.025em; }
+    .subtitle { font-size: 1.1rem; color: var(--muted); margin-bottom: 0; }
 
-    .subtitle {
-      font-size: 1.1rem;
-      color: var(--muted);
-      margin-bottom: 36px;
-    }
+    /* Typography */
+    h2 { font-size: 1.45rem; margin-top: 44px; margin-bottom: 16px; letter-spacing: -0.01em; }
+    p { line-height: 1.75; margin: 0; }
+    ul { list-style: none; padding-left: 0; margin: 0; }
+    li { padding: 10px 0; border-bottom: 1px solid var(--border); line-height: 1.6; }
+    li:last-child { border-bottom: none; }
+    a { color: var(--accent); text-decoration: none; font-weight: 500; }
+    a:hover { text-decoration: underline; }
 
-    h2 {
-      font-size: 1.45rem;
-      margin-top: 44px;
-      margin-bottom: 16px;
-      letter-spacing: -0.01em;
-    }
+    .links li { display: inline-block; margin-right: 18px; border-bottom: none; padding: 0; }
+    .collab { margin-top: 16px; font-size: 0.95rem; color: var(--muted); }
 
-    p {
-      line-height: 1.75;
-      margin: 0;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-      margin: 0;
-    }
-
-    li {
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      line-height: 1.6;
-    }
-
-    li:last-child {
-      border-bottom: none;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .links li {
-      display: inline-block;
-      margin-right: 18px;
-      border-bottom: none;
-      padding: 0;
-    }
-
-    footer {
-      margin-top: 56px;
-      font-size: 0.9rem;
-      color: var(--muted);
+    /* --- Game Styles (Flicker-free & Precise Alignment) --- */
+    .game-section {
+      margin-top: 80px;
+      padding-top: 60px;
+      border-top: 2px dashed var(--border);
       text-align: center;
     }
+    .game-container-2048 {
+      position: relative;
+      width: 320px;
+      height: 380px;
+      margin: 0 auto;
+      touch-action: none;
+    }
+    .score-container { font-weight: bold; font-size: 1.3rem; margin-bottom: 10px; color: var(--accent); }
+    #grid-container {
+      width: 320px; height: 320px; background: #bbada0; border-radius: 6px;
+      position: relative; padding: 15px; box-sizing: border-box;
+    }
+    .grid-cell {
+      width: 65px; height: 65px; background: rgba(238, 228, 218, 0.35);
+      border-radius: 4px; float: left; margin-right: 10px; margin-bottom: 10px;
+    }
+    .grid-cell:nth-child(4n) { margin-right: 0; }
 
-    @media (max-width: 600px) {
-      .container {
-        padding: 40px 28px;
-      }
+    .tile {
+      width: 65px; height: 65px; border-radius: 4px; position: absolute;
+      z-index: 10; display: flex; justify-content: center; align-items: center;
+      font-weight: bold; font-size: 0.72rem; box-sizing: border-box;
+      transition: transform 150ms ease-in-out, background-color 150ms;
+      opacity: 0; text-align: center; word-break: keep-all; line-height: 1.1;
+      padding: 4px;
+    }
+    .tile-new { animation: appear 150ms ease-out; }
+    @keyframes appear { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
 
-      h1 {
-        font-size: 2.2rem;
-      }
+    /* 단계별 색상 */
+    .tile-2 { background: #eee4da; color: #776e65; }
+    .tile-4 { background: #ede0c8; color: #776e65; }
+    .tile-8 { background: #f2b179; color: white; }
+    .tile-16 { background: #f59563; color: white; }
+    .tile-32 { background: #f67c5f; color: white; }
+    .tile-64 { background: #f65e3b; color: white; }
+    .tile-128 { background: #edcf72; color: white; }
+    .tile-256 { background: #edcc61; color: white; }
+    .tile-512 { background: #edc850; color: white; }
+    .tile-1024 { background: #edc53f; color: white; }
+    .tile-2048 { background: var(--accent); color: white; box-shadow: 0 0 15px var(--accent); }
+
+    #game-message {
+      display: none; position: absolute; top: 0; left: 0; width: 100%; height: 320px;
+      background: rgba(255, 255, 255, 0.9); flex-direction: column;
+      justify-content: center; align-items: center; z-index: 100; border-radius: 6px;
+    }
+    #game-message button {
+      padding: 10px 20px; background: var(--accent); color: white; border: none;
+      border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px;
     }
 
-
-  .header {
-    display: flex;
-    align-items: center;
-    gap: 28px;
-    margin-bottom: 48px;
-  }
-  
-  .profile-img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 10px; 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.10);
-  }
-  
-  .header-text h1 {
-    margin: 0;
-  }
-  
-  .header-text .subtitle {
-    margin-top: 8px;
-  }
+    footer { margin-top: 56px; font-size: 0.9rem; color: var(--muted); text-align: center; }
 
     @media (max-width: 600px) {
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .profile-img {
-    width: 100px;
-    height: 100px;
-  }
-}
-
-.collab {
-  margin-top: 16px;
-  font-size: 0.95rem;
-  color: var(--muted);
-}
-
-/* --- Research Fusion Game: WWW Edition --- */
-.game-section {
-  margin-top: 60px;
-  padding: 40px 0;
-  border-top: 1px solid var(--border);
-  text-align: center;
-}
-
-.game-container-2048 {
-  position: relative;
-  width: 320px; /* 전체 너비 고정 */
-  height: 400px;
-  margin: 0 auto;
-  touch-action: none;
-}
-
-.score-container {
-  font-weight: bold;
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  color: var(--accent);
-}
-
-#grid-container {
-  width: 320px;
-  height: 320px;
-  background: #bbada0;
-  border-radius: 6px;
-  position: relative;
-  padding: 15px; /* 내부 여백 */
-  box-sizing: border-box;
-}
-
-/* 배경 격자 (4x4) */
-.grid-cell {
-  width: 65px;
-  height: 65px;
-  background: rgba(238, 228, 218, 0.35);
-  border-radius: 4px;
-  float: left;
-  margin-right: 10px;
-  margin-bottom: 10px;
-}
-.grid-cell:nth-child(4n) { margin-right: 0; }
-
-/* 실시간 생성되는 타일 */
-.tile {
-  width: 65px;
-  height: 65px;
-  border-radius: 4px;
-  position: absolute;
-  z-index: 10;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  font-size: 0.85rem;
-  transition: transform 100ms ease-in-out;
-  animation: appear 150ms ease-out;
-  box-sizing: border-box;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-@keyframes appear {
-  0% { opacity: 0; transform: scale(0.5); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-/* 타일별 색상 (Data -> WWW) */
-.tile-2 { background: #eee4da; color: #776e65; } /* Data */
-.tile-4 { background: #ede0c8; color: #776e65; } /* Node */
-.tile-8 { background: #f2b179; color: white; }   /* Graph */
-.tile-16 { background: #f59563; color: white; }  /* Web */
-.tile-32 { background: var(--accent); color: white; box-shadow: 0 0 10px var(--accent); } /* WWW 🎉 */
-
-/* 게임 오버/성공 메시지 */
-#game-message {
-  display: none;
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 320px;
-  background: rgba(255, 255, 255, 0.9);
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  border-radius: 6px;
-}
-#game-message p { font-size: 1.5rem; font-weight: bold; margin-bottom: 15px; }
-#game-message button {
-  padding: 10px 20px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-    
+      .container { padding: 40px 28px; }
+      h1 { font-size: 2.2rem; }
+      .header { flex-direction: column; align-items: flex-start; }
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-
-  <div class="header">
-    <img src="profile.jpg" alt="Wooyoung Kim" class="profile-img" />
-    <div class="header-text">
-      <h1>Wooyoung Kim</h1>
-      <div class="subtitle">
-        Postdoctoral Researcher in AI
+    <div class="header">
+      <img src="profile.jpg" alt="Wooyoung Kim" class="profile-img" />
+      <div class="header-text">
+        <h1>Wooyoung Kim</h1>
+        <div class="subtitle">Postdoctoral Researcher in AI</div>
       </div>
     </div>
-  </div>
 
     <h2>About</h2>
     <p>
       I am an AI researcher specializing in graph and language models. I hold a Ph.D.
       in Industrial Engineering from Yonsei University, where my research focused on
-      integrating graph-structured knowledge with large language models. I also hold
-      a Bachelor’s degree in Theology and Computer Science from Yonsei University, and
-      have pursued additional studies in Theology at Sungkonghoe University and in
-      English Language and Literature at Korea National Open University. My research
-      interests include graph-augmented large language models, neuro-symbolic reasoning,
-      and the use of AI for sign language translation and generation.
+      integrating graph-structured knowledge with large language models.
     </p>
 
     <h2>Links</h2>
@@ -286,11 +145,6 @@
       <li><a href="https://scholar.google.com/citations?user=gAPd7OIAAAAJ&hl=ko">Google Scholar</a></li>
       <li><a href="mailto:timothy@yonsei.ac.kr">Email</a></li>
     </ul>
-
-    <p class="collab">
-      I am always open to discussions and collaborations on related research topics. <br>
-      For inquiries, reach me at <a href="mailto:timothy@email.com">timothy@yonsei.ac.kr</a>.
-    </p>
 
     <h2>Selected Publication</h2>
     <ul>
@@ -306,188 +160,172 @@
 
     <h2>News</h2>
     <ul>
-      <li><b>Jan 2026</b> — “Graph Discrete Prompt Optimization for Knowledge Graph Question Answering”
-        accepted at <i>WWW 2026</i>.</li>
-      <li><b>Nov 2025</b> — “Addressing Information Bottlenecks in Graph Augmented Large Language Models
-        via Graph Neural Summarization” accepted at <i>Information Fusion</i>.</li>
+      <li><b>Jan 2026</b> — “Graph Discrete Prompt Optimization for Knowledge Graph Question Answering” accepted at <i>WWW 2026</i>.</li>
       <li><b>Sep 2025</b> — Started postdoctoral research at Yonsei University.</li>
     </ul>
 
-    <footer>
-      Last updated · Jan 2026
-    </footer>
-
     <div class="game-section">
-  <h2>Research Fusion Puzzle</h2>
-  <p class="game-desc">Merge similar nodes to reach the <b>"Published!"</b> status.</p>
-  
-  <div class="game-container-2048">
-    <div class="score-container">Score: <span id="score">0</span></div>
-    <div id="grid-container">
-      <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-      <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-      <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-      <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-    </div>
-    <div id="game-message">
-      <p></p>
-      <button onclick="reset2048()">Restart</button>
-    </div>
-  </div>
-</div>
-
-    
-  </div>
-</body>
-
-
-<script>
-  const gridContainer = document.getElementById('grid-container');
-  const scoreDisplay = document.getElementById('score');
-  const messageScreen = document.getElementById('game-message');
-  
-  let score = 0;
-  let tiles = Array(16).fill(0);
-  const CELL_SIZE = 60;
-  const GAP = 12;
-
-  // 대학원생 서바이벌 테마 단계
-  const labels = {
-    2: "Idea",
-    4: "Data",
-    8: "Lab Meeting",
-    16: "Experiment",
-    32: "Lab Meeting++",
-    64: "Experiment++",
-    128: "Writing",
-    256: "Submission",
-    512: "Returral",
-    1024: "Published",
-    2048: "Graduate"
-  };
-
-  function initGame() {
-    gridContainer.querySelectorAll('.tile').forEach(t => t.remove());
-    tiles = Array(16).fill(0);
-    score = 0;
-    scoreDisplay.innerText = score;
-    messageScreen.style.display = 'none';
-    addRandomTile();
-    addRandomTile();
-    render();
-  }
-
-  function addRandomTile() {
-    let emptyCells = tiles.map((v, i) => v === 0 ? i : null).filter(v => v !== null);
-    if (emptyCells.length > 0) {
-      let idx = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-      tiles[idx] = Math.random() < 0.9 ? 2 : 4;
-    }
-  }
-
-  function getPos(i) {
-    const row = Math.floor(i / 4);
-    const col = i % 4;
-    // (간격 + 셀크기) * 인덱스 + 시작간격
-    return {
-      x: col * (CELL_SIZE + GAP) + GAP,
-      y: row * (CELL_SIZE + GAP) + GAP
-    };
-  }
-
-  function render() {
-    // 기존 타일들 유지하면서 위치만 이동시키기 위해 ID 부여 방식 사용 가능하나, 
-    // 여기서는 간단히 새로 그리되 위치 계산을 정교화함
-    gridContainer.querySelectorAll('.tile').forEach(t => t.remove());
-    tiles.forEach((value, i) => {
-      if (value > 0) {
-        const tile = document.createElement('div');
-        tile.className = `tile tile-${value}`;
-        tile.innerText = labels[value] || value;
-        const pos = getPos(i);
-        tile.style.left = `0px`;
-        tile.style.top = `0px`;
-        tile.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-        gridContainer.appendChild(tile);
-      }
-    });
-  }
-
-  function move(direction) {
-    let hasChanged = false;
-    let newTiles = [...tiles];
-    const getIdx = (r, c) => r * 4 + c;
-
-    for (let i = 0; i < 4; i++) {
-      let line = [];
-      for (let j = 0; j < 4; j++) {
-        let idx = (direction === 'UP' || direction === 'DOWN') ? getIdx(j, i) : getIdx(i, j);
-        line.push(newTiles[idx]);
-      }
-
-      if (direction === 'DOWN' || direction === 'RIGHT') line.reverse();
+      <h2 style="margin-top: 0;">Graduation Is All You Need</h2>
+      <p style="margin-bottom: 20px; color: var(--muted);">Merge blocks to reach the <b>Graduate</b> stage!</p>
       
-      // 결합 로직
-      let filtered = line.filter(v => v !== 0);
-      for (let j = 0; j < filtered.length - 1; j++) {
-        if (filtered[j] === filtered[j+1]) {
-          filtered[j] *= 2;
-          score += filtered[j];
-          filtered.splice(j + 1, 1);
-          filtered.push(0);
-        }
-      }
-      while (filtered.length < 4) filtered.push(0);
-      if (direction === 'DOWN' || direction === 'RIGHT') filtered.reverse();
+      <div class="game-container-2048">
+        <div class="score-container">Score: <span id="score">0</span></div>
+        <div id="grid-container">
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        </div>
+        <div id="game-message">
+          <p></p>
+          <button onclick="initGame()">다시 도전</button>
+        </div>
+      </div>
+    </div>
 
-      for (let j = 0; j < 4; j++) {
-        let idx = (direction === 'UP' || direction === 'DOWN') ? getIdx(j, i) : getIdx(i, j);
-        if (newTiles[idx] !== filtered[j]) hasChanged = true;
-        newTiles[idx] = filtered[j];
+    <footer>Last updated · Jan 2026</footer>
+  </div>
+
+  <script>
+    const gridContainer = document.getElementById('grid-container');
+    const scoreDisplay = document.getElementById('score');
+    const messageScreen = document.getElementById('game-message');
+    
+    let score = 0;
+    let tiles = Array(16).fill(0);
+    let tileElements = [];
+
+    const labels = {
+      2: "Idea", 4: "Data", 8: "Lab Meeting", 16: "Experiment",
+      32: "Lab Meeting++", 64: "Experiment++", 128: "Writing",
+      256: "Submission", 512: "Returral", 1024: "Published", 2048: "Graduate"
+    };
+
+    function setupTileElements() {
+      gridContainer.querySelectorAll('.tile').forEach(t => t.remove());
+      tileElements = [];
+      for (let i = 0; i < 16; i++) {
+        const el = document.createElement('div');
+        el.className = 'tile';
+        const pos = getPos(i);
+        el.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+        gridContainer.appendChild(el);
+        tileElements.push(el);
       }
     }
 
-    if (hasChanged) {
-      tiles = newTiles;
+    function getPos(i) {
+      const row = Math.floor(i / 4);
+      const col = i % 4;
+      return { x: 15 + col * 75, y: 15 + row * 75 };
+    }
+
+    function initGame() {
+      setupTileElements();
+      tiles = Array(16).fill(0);
+      score = 0;
       scoreDisplay.innerText = score;
+      messageScreen.style.display = 'none';
+      addRandomTile();
       addRandomTile();
       render();
-      checkStatus();
     }
-  }
 
-  function checkStatus() {
-    if (tiles.includes(2048)) {
-      messageScreen.style.display = 'flex';
-      messageScreen.querySelector('p').innerText = "Mission Accomplished: Tenure Track! 🏫";
-    } else if (!tiles.includes(0)) {
-      // 움직일 수 있는지 체크 생략(UI 간소화)
-      messageScreen.style.display = 'flex';
-      messageScreen.querySelector('p').innerText = "PhD is hard... Retry? 😭";
+    function addRandomTile() {
+      let emptyCells = tiles.map((v, i) => v === 0 ? i : null).filter(v => v !== null);
+      if (emptyCells.length > 0) {
+        let idx = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        tiles[idx] = Math.random() < 0.9 ? 2 : 4;
+        tileElements[idx].classList.add('tile-new');
+        setTimeout(() => tileElements[idx].classList.remove('tile-new'), 200);
+      }
     }
-  }
 
-  // 조작 핸들러
-  window.addEventListener('keydown', e => {
-    if (e.key.includes("Arrow")) {
-      e.preventDefault();
-      move(e.key.replace("Arrow", "").toUpperCase());
+    function render() {
+      tiles.forEach((value, i) => {
+        const el = tileElements[i];
+        if (value > 0) {
+          el.innerText = labels[value] || value;
+          el.className = `tile tile-${value}`;
+          el.style.opacity = "1";
+        } else {
+          el.style.opacity = "0";
+          el.innerText = "";
+        }
+      });
     }
-  });
 
-  let ts;
-  gridContainer.addEventListener('touchstart', e => { ts = e.touches[0]; }, {passive:false});
-  gridContainer.addEventListener('touchmove', e => { e.preventDefault(); }, {passive:false});
-  gridContainer.addEventListener('touchend', e => {
-    if (!ts) return;
-    let dx = e.changedTouches[0].screenX - ts.screenX;
-    let dy = e.changedTouches[0].screenY - ts.screenY;
-    if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 'RIGHT' : 'LEFT');
-    else move(dy > 0 ? 'DOWN' : 'UP');
-    ts = null;
-  });
+    function move(direction) {
+      let hasChanged = false;
+      let newTiles = [...tiles];
+      const getIdx = (r, c) => r * 4 + c;
 
-  initGame();
-</script>
+      for (let i = 0; i < 4; i++) {
+        let line = [];
+        for (let j = 0; j < 4; j++) {
+          let idx = (direction === 'UP' || direction === 'DOWN') ? getIdx(j, i) : getIdx(i, j);
+          line.push(newTiles[idx]);
+        }
+        if (direction === 'DOWN' || direction === 'RIGHT') line.reverse();
+        
+        let filtered = line.filter(v => v !== 0);
+        for (let j = 0; j < filtered.length - 1; j++) {
+          if (filtered[j] === filtered[j+1]) {
+            filtered[j] *= 2;
+            score += filtered[j];
+            filtered.splice(j + 1, 1);
+            filtered.push(0);
+          }
+        }
+        while (filtered.length < 4) filtered.push(0);
+        if (direction === 'DOWN' || direction === 'RIGHT') filtered.reverse();
 
+        for (let j = 0; j < 4; j++) {
+          let idx = (direction === 'UP' || direction === 'DOWN') ? getIdx(j, i) : getIdx(i, j);
+          if (newTiles[idx] !== filtered[j]) hasChanged = true;
+          newTiles[idx] = filtered[j];
+        }
+      }
+
+      if (hasChanged) {
+        tiles = newTiles;
+        scoreDisplay.innerText = score;
+        addRandomTile();
+        render();
+        checkStatus();
+      }
+    }
+
+    function checkStatus() {
+      if (tiles.includes(2048)) {
+        messageScreen.style.display = 'flex';
+        messageScreen.querySelector('p').innerText = "Congratulations! You Graduated! 🎓";
+      } else if (!tiles.includes(0)) {
+        messageScreen.style.display = 'flex';
+        messageScreen.querySelector('p').innerText = "Paper Rejected... Try Again? 😭";
+      }
+    }
+
+    window.addEventListener('keydown', e => {
+      if (e.key.includes("Arrow")) {
+        e.preventDefault();
+        move(e.key.replace("Arrow", "").toUpperCase());
+      }
+    });
+
+    let ts;
+    gridContainer.addEventListener('touchstart', e => { ts = e.touches[0]; }, {passive:false});
+    gridContainer.addEventListener('touchmove', e => { e.preventDefault(); }, {passive:false});
+    gridContainer.addEventListener('touchend', e => {
+      if (!ts) return;
+      let dx = e.changedTouches[0].screenX - ts.screenX;
+      let dy = e.changedTouches[0].screenY - ts.screenY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30) move(dx > 0 ? 'RIGHT' : 'LEFT');
+      else if (Math.abs(dy) > 30) move(dy > 0 ? 'DOWN' : 'UP');
+      ts = null;
+    });
+
+    initGame();
+  </script>
+</body>
 </html>
